@@ -1,9 +1,10 @@
 # Bancard VPOS 2.0 for Laravel
 
 [![Latest Version](https://img.shields.io/packagist/v/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
-[![Total Downloads](https://img.shields.io/packagist/dt/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
-[![License](https://img.shields.io/packagist/l/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
-[![PHP Version](https://img.shields.io/packagist/php-version/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+[![Tests](https://img.shields.io/github/actions/workflow/status/krugerdavid/laravel-bancard/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/krugerdavid/laravel-bancard/actions/workflows/run-tests.yml)
+[![PHP Version](https://img.shields.io/packagist/php-v/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+[![License](https://img.shields.io/packagist/l/krugerdavid/laravel-bancard.svg?style=flat-square)](LICENSE.md)
+
 
 Laravel integration for Bancard VPOS 2.0 (Single Buy, Cards, Charge). Basado en la [documentación oficial Bancard](https://comercios.bancard.com.py) eCommerce Single Buy v1.22.
 
