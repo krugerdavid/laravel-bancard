@@ -17,6 +17,13 @@ Bancard es la pasarela de pagos líder en Paraguay. Este paquete encapsula la AP
 * Laravel 10, 11, 12 o 13
 * GuzzleHTTP 7.x
 
+## Compatibilidad
+
+| Paquete | PHP | Laravel |
+|---------|-----|---------|
+| 1.1.x   | 8.2+ | 10, 11, 12, 13 |
+| 1.0.x   | 8.1+ | 10, 11 |
+
 ## Installation
 
 ```bash
@@ -155,17 +162,31 @@ $result = Bancard::charge(
 $result = Bancard::deleteCard(966389, $aliasToken);
 ```
 
-### Verificar token de confirmación (webhook)
+### Confirmación (webhook)
 
-Bancard envía un POST a tu URL de confirmación. Verifica el token:
+Bancard envía un POST server-to-server a tu URL de confirmación con el resultado del pago. **El `return_url` es solo experiencia de usuario: el cobro debe registrarse acá.**
+
+Payload (resumen): `operation.shop_process_id`, `operation.token`, `operation.response` (`S` aprobado / `N`), `operation.response_code`, `operation.amount`, `operation.currency`.
 
 ```php
-$isValid = Bancard::verifyConfirmToken(
-    $shopProcessId,
-    $amount,
-    $receivedToken
-);
+// routes/web.php  (excluir la ruta de CSRF)
+Route::post('/bancard/confirm', function (Request $request, BancardManager $bancard) {
+    $op = $request->input('operation', []);
+
+    if (! $bancard->verifyConfirmToken($op['shop_process_id'], $op['amount'], $op['token'], $op['currency'] ?? 'PYG')) {
+        return response()->json(['status' => 'error'], 403);
+    }
+
+    // Idempotente: Bancard puede reintentar. Comparar también el monto con el registrado.
+    if (($op['response'] ?? null) === 'S') {
+        // registrar el cobro una sola vez por shop_process_id
+    }
+
+    return response()->json(['status' => 'success']);
+});
 ```
+
+Si el callback no llega, consultá el estado con `Bancard::getConfirmation($shopProcessId)`.
 
 ## Inyección de dependencias
 
