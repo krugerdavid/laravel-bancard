@@ -1,20 +1,29 @@
 # Bancard VPOS 2.0 for Laravel
 
+[![Latest Version](https://img.shields.io/packagist/v/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+[![Total Downloads](https://img.shields.io/packagist/dt/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+[![License](https://img.shields.io/packagist/l/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+[![PHP Version](https://img.shields.io/packagist/php-version/krugerdavid/laravel-bancard.svg?style=flat-square)](https://packagist.org/packages/krugerdavid/laravel-bancard)
+
 Laravel integration for Bancard VPOS 2.0 (Single Buy, Cards, Charge). Basado en la [documentación oficial Bancard](https://comercios.bancard.com.py) eCommerce Single Buy v1.22.
 
-## Requisitos
+## Why this package exists
+
+Bancard es la pasarela de pagos líder en Paraguay. Este paquete encapsula la API VPOS 2.0 (Single Buy, tarjetas, Zimple) en una interfaz Laravel limpia: Facade, Manager inyectable, DTOs tipados y manejo de errores con excepciones. Evita duplicar lógica de tokens, URLs y validación en cada proyecto.
+
+## Requirements
 
 * PHP 8.1+
 * Laravel 10, 11 o 12
 * GuzzleHTTP 7.x
 
-## Instalación
+## Installation
 
 ```bash
 composer require krugerdavid/laravel-bancard
 ```
 
-## Configuración
+## Configuration
 
 Publicar la config:
 
@@ -31,7 +40,7 @@ BANCARD_STAGING=true
 BANCARD_TIMEOUT=30
 ```
 
-## Uso
+## Usage
 
 ### Pago ocasional (Single Buy)
 
@@ -215,10 +224,19 @@ Bancard::singleBuy(54322, '10330.00', 'Pago', 'https://x.com', [
 | Charge | charge | POST |
 | Delete Card | users/{id}/cards | DELETE |
 
-## Créditos
+## Related packages
+
+- [laravel-bancard-qr](https://github.com/krugerdavid/laravel-bancard-qr) — Bancard QR (pagos con código QR)
+- [laravel-pagopar](https://github.com/krugerdavid/laravel-pagopar) — Pagopar (transferencias, billeteras, múltiples medios)
+
+## Used in Paraguay / production-ready
+
+Este paquete está en uso en producción en comercios de Paraguay. Bancard VPOS es la pasarela estándar para pagos con tarjeta en el país.
+
+## Credits
 
 - [David Krüger](https://github.com/krugerdavid)
 
-## Licencia
+## License
 
 MIT
