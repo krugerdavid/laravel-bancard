@@ -33,6 +33,9 @@ jobs:
           coverage: none
 
       - name: Install dependencies
+        env:
+          # Laravel 11 (EOL) tiene avisos de seguridad que bloquean la resolución; solo para probar compatibilidad.
+          COMPOSER_NO_SECURITY_BLOCKING: 1
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update --dev
           composer update --prefer-stable --prefer-dist --no-interaction
