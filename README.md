@@ -13,8 +13,8 @@ Bancard es la pasarela de pagos líder en Paraguay. Este paquete encapsula la AP
 
 ## Requirements
 
-* PHP 8.1+
-* Laravel 10, 11 o 12
+* PHP 8.2+
+* Laravel 10, 11, 12 o 13
 * GuzzleHTTP 7.x
 
 ## Installation
