@@ -205,3 +205,30 @@ it('throws on API error', function () {
     expect(fn () => $manager->singleBuy(1, '100', 'Test', 'https://x.com'))
         ->toThrow(\Exception::class, 'Bancard API error');
 });
+
+it('verify confirm token normalizes the amount format (v1.22: Decimal 15,2)', function () {
+    $manager = new BancardManager($this->config);
+
+    $token = md5($this->config['private_key'] . '12313' . 'confirm' . '10100.00' . 'PYG');
+
+    expect($manager->verifyConfirmToken(12313, '10100', $token))->toBeTrue();
+    expect($manager->verifyConfirmToken(12313, '10100.0', $token))->toBeTrue();
+    expect($manager->verifyConfirmToken(12313, '10100.00', $token))->toBeTrue();
+    expect($manager->verifyConfirmToken(12313, '10101.00', $token))->toBeFalse();
+});
+
+it('single buy truncates description to 20 chars (v1.22 limit)', function () {
+    $history = [];
+    $mock = new MockHandler([new Response(200, [], json_encode(['status' => 'success', 'process_id' => 'x']))]);
+    $stack = HandlerStack::create($mock);
+    $stack->push(\GuzzleHttp\Middleware::history($history));
+
+    $manager = new BancardManager($this->config);
+    injectBancardClient($manager, new Client(['handler' => $stack]));
+
+    $manager->singleBuy(1, '1000.00', 'Impuesto inmobiliario 2025 - cuota 3', 'https://example.com/finish');
+
+    $sent = json_decode((string) $history[0]['request']->getBody(), true);
+    expect(mb_strlen($sent['operation']['description']))->toBeLessThanOrEqual(20);
+    expect($sent['operation']['description'])->toBe('Impuesto inmobiliari');
+});

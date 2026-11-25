@@ -41,6 +41,14 @@ class BancardManager
     }
 
     /**
+     * v1.22: description es String(20), se muestra al usuario en el checkout.
+     */
+    protected function formatDescription(string $description): string
+    {
+        return mb_substr($description, 0, 20);
+    }
+
+    /**
      * Single Buy token: md5(private_key + shop_process_id + amount + currency)
      */
     protected function singleBuyToken(int|string $shopProcessId, string $amount, string $currency = 'PYG'): string
@@ -125,7 +133,7 @@ class BancardManager
             'shop_process_id' => $shopProcessId,
             'amount' => $amountFormatted,
             'currency' => 'PYG',
-            'description' => $description,
+            'description' => $this->formatDescription($description),
             'return_url' => $returnUrl,
         ];
 
@@ -174,7 +182,7 @@ class BancardManager
             'amount' => $amountFormatted,
             'currency' => 'PYG',
             'additional_data' => $userPhone,
-            'description' => $description,
+            'description' => $this->formatDescription($description),
             'return_url' => $returnUrl,
             'zimple' => 'S',
         ];
@@ -320,7 +328,8 @@ class BancardManager
      */
     public function verifyConfirmToken(int|string $shopProcessId, string $amount, string $token, string $currency = 'PYG'): bool
     {
-        $expected = $this->singleBuyConfirmToken($shopProcessId, $amount, $currency);
+        // v1.22: el token usa el monto como Decimal(15,2) con '.' (ej. "10100.00").
+        $expected = $this->singleBuyConfirmToken($shopProcessId, $this->formatAmount($amount), $currency);
 
         return hash_equals($expected, $token);
     }

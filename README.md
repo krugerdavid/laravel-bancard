@@ -107,12 +107,21 @@ Incluir el script e inicializar el formulario:
 
 Librería: [bancard-checkout-js](https://github.com/Bancard/bancard-checkout-js)
 
+> `description` admite máximo **20 caracteres** (doc v1.22); el paquete lo trunca automáticamente.
+
 ### Rollback (reversa)
 
 ```php
 $result = Bancard::rollback(12313);
 // $result['status'] === 'success'
 ```
+
+Reglas de la doc oficial (v1.22):
+
+* Solo se puede reversar **el mismo día** de la operación, y mientras no esté *cuponada* (`TransactionAlreadyConfirmed` → anulación manual por el área comercial de Bancard).
+* Conviene llamarlo para transacciones canceladas o abandonadas por el usuario.
+* `PaymentNotFoundError` significa que el cliente no pagó: se toma como respuesta correcta.
+* `AlreadyRollbackedError`: ya existía una reversa previa.
 
 ### Consultar confirmación
 
@@ -185,6 +194,8 @@ Route::post('/bancard/confirm', function (Request $request, BancardManager $banc
     return response()->json(['status' => 'success']);
 });
 ```
+
+Requisitos de la doc oficial: responder **HTTP 200 dentro de 30 segundos** (un no-200 no significa que el pago fue denegado: siempre verificá el estado), URL pública y TLS 1.2. Si el pago no se confirma tras ~10 minutos, consultá `getConfirmation` y, si no fue pagado, hacé `rollback`.
 
 Si el callback no llega, consultá el estado con `Bancard::getConfirmation($shopProcessId)`.
 
